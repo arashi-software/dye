@@ -3,7 +3,7 @@ author        = "Luke"
 description   = "An image colorizer"
 license       = "GPL-3.0-or-later"
 srcDir        = "src"
-bin           = @["cli/dye", "web/index"]
+bin           = @["dye"]
 
 requires "nim >= 1.4.8"
 requires "progress"
