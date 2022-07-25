@@ -37,11 +37,6 @@ jobs:
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
           path: src\dye.exe
-      - name: Upload files
-        uses: alexellis/upload-assets@0.2.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          asset_paths: '["dye-*-*"]'
+
           
   
