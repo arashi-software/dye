@@ -26,7 +26,9 @@ jobs:
         with:
           version: '1.66' 
       - name: Build
-        run: nim c -d:release src/dye.nim
+        run: |
+          nimble install -d -y
+          nim c -d:release src/dye.nim
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows' }}
         with:
