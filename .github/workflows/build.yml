@@ -1,8 +1,9 @@
 name: Build
 
 on:
-  - push
-  - pull_request
+  workflow_dispatch: 
+  release: 
+    types: [released]
 
 jobs:
   build:
@@ -37,6 +38,12 @@ jobs:
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
           path: src/dye
+      - name: Release
+        uses: alexellis/upload-assets@0.2.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["dye-*-*"]'
 
           
   
