@@ -36,7 +36,7 @@ jobs:
         if: ${{ matrix.os == 'windows' }}
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
-          path: src\dye.exe
+          path: src/dye.exe
 
           
   
