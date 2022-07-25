@@ -1,9 +1,9 @@
 name: Build
 
 on:
-  push:
-    tags:
-      - v[0-9]+.*
+  workflow_dispatch: 
+  release: 
+    types: [released]
 
 jobs:
   build:
@@ -38,13 +38,6 @@ jobs:
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
           path: src\dye.exe
-      - name: Release
-        uses: taiki-e/create-gh-release-action@v1
-        with:
-          title: dye $tag
-          changelog: CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload files
         uses: alexellis/upload-assets@0.2.2
         env:
