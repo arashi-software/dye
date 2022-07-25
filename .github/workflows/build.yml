@@ -1,1 +1,44 @@
+name: Upload builds to release
 
+on:
+  workflow_dispatch: 
+  release: 
+    types: [released]
+
+jobs:
+  build-appimage:
+    name: Build and upload amd64 AppImages
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: iffy/install-nim@v4.1.1
+      - name: Install x11 dev libraries
+        run: sudo apt install tar gzip
+      - name: Build AppImage
+        run: |
+          nimble install -d -y
+          nim c -d:release src/dye.nim
+          gzip -c src/dye > dye-linux-x86.gz
+      - name: Upload release binaries
+        uses: alexellis/upload-assets@0.2.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["*-*-*.gz"]'
+  build-win: 
+    name: Build and upload amd64 exe
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: iffy/install-nim@v4.1.1
+      - name: Build exe
+        run: |
+          nimble install -d -y
+          nim c -d:release src/dye.nim
+      - name: Upload release binaries
+        uses: alexellis/upload-assets@0.2.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["*.exe"]'
