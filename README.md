@@ -15,6 +15,9 @@ nimble bi # Build and install dye
 #### Binary
 There are many binaries for different operating systems and architectures on the github releases page
 
+#### Packages
+Right now dye is only packaged in the aur but there are plans for many other package managers
+
 ### Usage
 ```bash
 # Get command info
