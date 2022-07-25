@@ -1,3 +1,5 @@
+import tables
+
 let decay* = @[
   "#171B20",
   "#15191d",
@@ -55,20 +57,25 @@ let arcticblush* = @[
   "#cce9ea",
   "#c2cae2",
   "#d9d7d6",
-  "#323949", 
-  "#E6676B", 
-  "#A2E4B8", 
-  "#e2d06a", 
-  "#92bbed", 
-  "#ecc6e8", 
-  "#80ffff", 
+  "#323949",
+  "#E6676B",
+  "#A2E4B8",
+  "#e2d06a",
+  "#92bbed",
+  "#ecc6e8",
+  "#80ffff",
   "#cfebec",
-  "#3d3e51", 
-  "#FF7377", 
-  "#AAF0C1", 
+  "#3d3e51",
+  "#FF7377",
+  "#AAF0C1",
   "#eadd94",
-  "#bdd6f4", 
-  "#f9ecf7", 
-  "#b3ffff", 
-  "#edf7f8" 
+  "#bdd6f4",
+  "#f9ecf7",
+  "#b3ffff",
+  "#edf7f8"
 ]
+
+
+let pal* = (decay: decay, darkdecay: darkDecay, arcticblush: arcticblush)
+
+export tables

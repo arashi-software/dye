@@ -148,15 +148,10 @@ proc col(imgPath: string, bar: bool): void =
         colorFile = readFile($args["--colorfile"]).strip().split(",")
       except:
         var a = $args["--colorfile"]
-        if a == "decay":
-          colorFile = decay
-        elif a == "dark_decay":
-          colorFile = darkDecay
-        elif a == "arcticblush":
-          colorFile = arcticblush
-        else:
-          stderr.writeLine("Color file not found: " & $args["--colorfile"])
-          quit 1
+        for k, v in pal.fieldPairs:
+          if a == k:
+            colorFile = v
+            break
       #echo colorFile
       colors = @[]
       for color in colorFile:
@@ -203,7 +198,11 @@ proc col(imgPath: string, bar: bool): void =
       try:
         colorFile = readFile($args["--colorfile"]).strip().split(",")
       except:
-        colorFile = readFile(paletteDir / $args["--colorfile"] & ".csv").strip().split(",")
+        var a = $args["--colorfile"]
+        for k, v in pal.fieldPairs:
+          if a == k:
+            colorFile = v
+            break
       colors = @[]
       for color in colorFile:
         if "#" in color.strip:
@@ -241,10 +240,9 @@ elif args["luma"]:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
 elif args["list"]:
-  for file in walkDir(paletteDir):
-    var f = splitFile file.path
-    if f.ext == ".csv":
-      stdout.writeLine(f.name)
+  for k,v in pal.fieldPairs:
+    discard v
+    echo k
 else:
   for img in imgs:
     try:
