@@ -45,6 +45,3 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           asset_paths: '["dye-*-*.zip"]'
-
-          
-  
