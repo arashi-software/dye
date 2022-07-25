@@ -1,44 +1,39 @@
-name: Upload builds to release
+name: Build
 
 on:
-  workflow_dispatch: 
-  release: 
-    types: [released]
+  - push
+  - pull_request
 
 jobs:
-  build-appimage:
-    name: Build and upload amd64 AppImages
-    runs-on: ubuntu-18.04
+  build:
+    name: ${{ matrix.os }}-${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [linux, windows, darwin]
+        arch: [386, amd64, arm64]
+        exclude:  
+          - arch: "386"
+            os: darwin 
+          - arch: arm64
+            os: windows 
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: iffy/install-nim@v4.1.1
-      - name: Install x11 dev libraries
-        run: sudo apt install tar gzip
-      - name: Build AppImage
-        run: |
-          nimble install -d -y
-          nim c -d:release src/dye.nim
-          gzip -c src/dye > dye-linux-x86.gz
-      - name: Upload release binaries
-        uses: alexellis/upload-assets@0.2.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Install nim
+        uses: iffy/install-nim@v4.1.3
         with:
-          asset_paths: '["*-*-*.gz"]'
-  build-win: 
-    name: Build and upload amd64 exe
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: iffy/install-nim@v4.1.1
-      - name: Build exe
-        run: |
-          nimble install -d -y
-          nim c -d:release src/dye.nim
-      - name: Upload release binaries
-        uses: alexellis/upload-assets@0.2.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          version: '1.66' 
+      - name: Build
+        run: nim c -d:release src/dye.nim
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os != 'windows' }}
         with:
-          asset_paths: '["*.exe"]'
+          name: dye-${{ matrix.os }}-${{ matrix.arch }}
+          path: src/dye
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os == 'windows' }}
+        with:
+          name: dye-${{ matrix.os }}-${{ matrix.arch }}
+          path: src\dye.exe
