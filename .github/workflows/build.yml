@@ -16,8 +16,6 @@ jobs:
         exclude:  
           - arch: "386"
             os: darwin 
-          - arch: arm64
-            os: windows 
 
     steps:
       - name: Checkout sources
