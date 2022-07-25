@@ -10,7 +10,7 @@
 ```bash
 git clone https://github.com/Infinitybeond1/dye # clone the repo
 cd dye
-nimble build_install # Build and install dye
+nimble bi # Build and install dye
 ```
 #### Binary
 Coming Soon!
@@ -25,7 +25,4 @@ dye -b --colorfile dark-decay test.jpg
 
 # List color palettes
 dye list
-
-# Set a custom directory to search for palettes
-export DYE_PALETTE_DIR="hello"  
 ```

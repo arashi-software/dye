@@ -8,7 +8,8 @@ import os,
 
 import ../lib/[
                opts,
-               colors
+               colors,
+               palettes
   ]
 
 if $args["<file>"] == "flip":
@@ -146,7 +147,16 @@ proc col(imgPath: string, bar: bool): void =
       try:
         colorFile = readFile($args["--colorfile"]).strip().split(",")
       except:
-        colorFile = readFile(paletteDir / $args["--colorfile"] & ".csv").strip().split(",")
+        var a = $args["--colorfile"]
+        if a == "decay":
+          colorFile = decay
+        elif a == "dark_decay":
+          colorFile = darkDecay
+        elif a == "arcticblush":
+          colorFile = arcticblush
+        else:
+          stderr.writeLine("Color file not found: " & $args["--colorfile"])
+          quit 1
       #echo colorFile
       colors = @[]
       for color in colorFile:

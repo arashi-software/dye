@@ -16,9 +16,17 @@ requires "docopt"
 task lint, "Lint all *.nim files":
   exec "nimpretty --indent:2 */**.nim"
 
-task build_local, "Build for release":
+task b, "Build for release":
   exec "nimble install -d:release && nim c -d:release src/dye && mkdir -p bin && mv -f src/dye bin/"
 
-task build_install, "Build and install to your path (/usr/bin/)":
-  exec "nimble install -d:release && nim c -d:release src/dye && sudo mv -f src/dye /usr/bin/ && mkdir -p ~/.config/dye/palettes/ && cp -rvf palettes/ ~/.config/dye/"
+task bi, "Build and install to your path (/usr/bin/)":
+  exec "nimble install -d:release && nim c -d:release src/dye"
 
+task bz, "Build using zig as a c compiler":
+  exec "nimble install -y -d && nim c -d:release --cc:clang --clang.exe:'scripts/zigcc' src/dye.nim && mkdir -p bin && mv -f src/dye bin/"
+
+task i, "Install a built version of dye":
+  exec "sudo mv -fv bin/dye /usr/bin/"
+
+task bzi, "Build with zig and install":
+  exec "nimble bz && nimble i"
