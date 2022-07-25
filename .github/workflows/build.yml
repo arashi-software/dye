@@ -1,9 +1,8 @@
 name: Build
 
 on:
-  workflow_dispatch: 
-  release: 
-    types: [released]
+  - push
+  - pull_request
 
 jobs:
   build:
