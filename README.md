@@ -13,7 +13,7 @@ cd dye
 nimble bi # Build and install dye
 ```
 #### Binary
-Coming Soon!
+There are many binaries for different platforms on the github releases page
 
 ### Usage
 ```bash
