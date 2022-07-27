@@ -30,8 +30,14 @@ jobs:
       - name: Build
         run: |
           nimble install -d -y
-          nim c -d:release src/dye.nim
+          nimble build -d:release
       - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os != 'windows' }}
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
-          path: src/dye
+          path: dye
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os == 'windows' }}
+        with:
+          name: dye-${{ matrix.os }}-${{ matrix.arch }}
+          path: dye.exe
