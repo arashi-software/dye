@@ -19,10 +19,6 @@ jobs:
           - 386 
           - amd64
           - arm64
-        osname:
-          - linux
-          - darwin
-          - windows
 
     steps:
       - name: Checkout sources
@@ -39,13 +35,13 @@ jobs:
         if: ${{ matrix.os != 'windows-latest' }}
         with:
           type: 'zip'
-          filename: dye-${{ matrix.osname }}-${{ matrix.arch }}.zip
+          filename: dye-${{ matrix.os }}-${{ matrix.arch }}.zip
           path: dye
       - uses: thedoctor0/zip-release@main
         if: ${{ matrix.os == 'windows-latest' }}
         with:
           type: 'zip'
-          filename: dye-${{ matrix.osname }}-${{ matrix.arch }}.zip
+          filename: dye-${{ matrix.os }}-${{ matrix.arch }}.zip
           path: dye.exe
 
       - name: Release
