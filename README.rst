@@ -62,6 +62,7 @@ Contributing
 ~~~~~~~~~~~~
 
 Feel free to open a pull request if you wish to make any changes, here
-are a few of the ways you can help - Create some color palettes
-(lib/palettes.nim) they are just exported sequences of quoted hex codes
-- Help me improve the docs - Package it for platforms
+are a few of the ways you can help 
+ * Create some color palettes (lib/palettes.nim) they are just exported sequences of quoted hex codes
+ * Help me improve the docs 
+ * Package it for platforms
