@@ -36,9 +36,9 @@ import ../lib/[colors, palettes, help]
 
 if helpcmd:
   if command != "null":
-    for k,v in helps.fieldPairs:
+    for k, v in helps.fieldPairs:
       if k == command:
-        echo v 
+        echo v
         quit 0
     stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "Unknown command: " & command)
     quit 0
@@ -208,7 +208,7 @@ elif luma:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
 elif list:
-  for k,v in pal.fieldPairs:
+  for k, v in pal.fieldPairs:
     discard v
     echo k
 else:

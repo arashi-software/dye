@@ -91,7 +91,8 @@ proc checkFileOrDir*(file: string): seq[string] =
         result.add(strip(Lfile))
   else:
     if not fileExists(file):
-      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "File not found: " & file & "\n")
+      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "File not found: " &
+          file & "\n")
     result = @[file]
 
 proc rmTag*(colors: seq[string]): seq[string] =
