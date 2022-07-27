@@ -19,24 +19,35 @@ jobs:
           - 386 
           - amd64
           - arm64
-        exclude:  
-          - arch: "386"
-            os: darwin 
+        osname:
+          - linux
+          - darwin
+          - windows
 
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
-      - name: Install nim
-        uses: iffy/install-nim@v4.1.3
+      - uses: alaviss/setup-nim@0.1.1
+        with:
+          path: 'nim'
+          version: devel
       - name: Build
         run: |
           nimble install -d -y
           nimble build
-          mkdir dye-bin
-          cp dye dye-bin
-      - uses: montudor/action-zip@v1
+      - uses: thedoctor0/zip-release@main
+        if: ${{ matrix.os != 'windows' }}
         with:
-          args: zip -qq -r dye-${{ matrix.os }}-${{ matrix.arch }}.zip dye/dye
+          type: 'zip'
+          filename: dye-${{ matrix.osname }}-${{ matrix.arch }}.zip
+          path: dye
+      - uses: thedoctor0/zip-release@main
+        if: ${{ matrix.os == 'windows' }}
+        with:
+          type: 'zip'
+          filename: dye-${{ matrix.osname }}-${{ matrix.arch }}.zip
+          path: dye.exe
+
       - name: Release
         uses: alexellis/upload-assets@0.2.2
         env:
