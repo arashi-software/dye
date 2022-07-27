@@ -4,32 +4,71 @@ import os,
        pixie,
        strutils,
        progress,
-       terminal
+       terminal,
+       commandeer,
+       strformat
 
-import ../lib/[
-               opts,
-               colors,
-               palettes
-  ]
+const version = staticRead(fmt"../dye.nimble").splitLines()[0].split("=")[1]
+  .strip().replace("\"", "")
 
-if $args["<file>"] == "flip":
-  echo "Usage: dye flip <file>"
-  quit 1
+commandline:
+  arguments dyefile, string
+  option dyebar, bool, "bar", "b"
+  option dyeoutfile, string, "out", "o", "null"
+  option palette, string, "palette", "p"
+  exitoption "v", "version", "dye v" & version
+  subcommand flip, "flip", "f":
+    arguments flipfile, string
+    option flipoutfile, string, "out", "o", "null"
+    option flipbar, bool, "bar", "b"
+  subcommand luma, "luma", "l":
+    arguments lumafile, string
+    option lumaoutfile, string, "out", "o", "null"
+    option lumabar, bool, "bar", "b"
+  subcommand helpcmd, "help", "h":
+    option command, string, "command", "c", "null"
+  subcommand list, "list", "l":
+    option x, bool, "X", "x", false # This doesnt actually do anything.
+
+discard x
+
+import ../lib/[colors, palettes, help]
+
+if helpcmd:
+  if command != "null":
+    for k,v in helps.fieldPairs:
+      if k == command:
+        echo v 
+        quit 0
+    stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "Unknown command: " & command)
+    quit 0
+  else:
+    echo helps.all
+    quit 0
+
+var outfile: string
+var bar: bool
+
+if flip:
+  outfile = flipoutfile
+  bar = flipbar
+elif luma:
+  outfile = lumaoutfile
+  bar = lumabar
+else:
+  outfile = dyeoutfile
+  bar = dyebar
 
 var
   flipName: string
   convName: string
   lumaName: string
 
-var paletteDir: string
-
-paletteDir = getConfigDir() / "dye/palettes"
-
 proc fileName(file: string): void =
-  if $args["--output"] != "nil":
-    flipName = $args["--output"] & ".png"
-    convName = $args["--output"] & ".png"
-    lumaName = $args["--output"] & ".png"
+  if outfile != "null":
+    flipName = outfile & ".png"
+    convName = outfile & ".png"
+    lumaName = outfile & ".png"
   else:
     flipName = "flip-" & getFilename(file) & ".png"
     convName = "conv-" & getFilename(file) & ".png"
@@ -37,18 +76,7 @@ proc fileName(file: string): void =
 
 var imgs: seq[string]
 
-if dirExists(strip($args["<file>"])):
-  imgs = @[]
-  for file in walkDirRec($args["<file>"]):
-    if ".png" in $file or ".jpg" in $file or ".jpeg" in $file:
-      imgs.add(strip(file))
-  #echo imgs
-  #echo execCmdEx("ls -m " & $args["<file>"])[0].split(", ")
-else:
-  imgs = @[$args["<file>"]]
-  #echo imgs
-
-proc flip(imgPath: string, bar: bool): void =
+proc flipCol(imgPath: string, bar: bool): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
       imgPath).name & splitFile(imgPath).ext & " ...")
   if bar:
@@ -88,7 +116,7 @@ proc flip(imgPath: string, bar: bool): void =
       removeFile(flipName)
     newImg.writeFile(flipName)
 
-proc luma(imgPath: string, bar: bool): void =
+proc lumaCol(imgPath: string, bar: bool): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
       imgPath).name & splitFile(imgPath).ext & " ...")
   if bar:
@@ -124,43 +152,12 @@ proc luma(imgPath: string, bar: bool): void =
       removeFile(lumaName)
     newImg.writeFile(lumaName)
 
-proc col(imgPath: string, bar: bool): void =
+proc col(imgPath: string, bar: bool, colors: seq[string]): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
       imgPath).name & splitFile(imgPath).ext & " ...")
   fileName(imgPath)
   if bar:
     var imageFile = readImage(imgPath)
-    var colors: seq[string]
-    if $args["--colors"] == "nil" and $args["--colorfile"] == "nil":
-      stderr.writeLine("Please specify either a csv file with hex colors or a list of comma separated hex colors")
-      quit 1
-    elif $args["--colors"] != "nil":
-      var colorSplit = strip($args["--colors"]).split(",")
-      colors = @[]
-      for color in colorSplit:
-        if "#" in color:
-          colors.add color.replace("#", "").strip()
-        else:
-          colors.add(color.strip())
-    elif $args["--colorfile"] != "nil":
-      var colorFile: seq[string]
-      try:
-        colorFile = readFile($args["--colorfile"]).strip().split(",")
-      except:
-        var a = $args["--colorfile"]
-        for k, v in pal.fieldPairs:
-          if a == k:
-            colorFile = v
-            break
-      #echo colorFile
-      colors = @[]
-      for color in colorFile:
-        if "#" in color.strip:
-          colors.add color.replace("#", "").strip()
-        else:
-          colors.add(color.strip())
-      #echo colors
-
     let h = imageFile.height
     let w = imageFile.width
     let colorsRGB = colors.prepareClosestColor()
@@ -181,35 +178,6 @@ proc col(imgPath: string, bar: bool): void =
         imgPath).name & splitFile(imgPath).ext & "\n")
   else:
     var imageFile = readImage(imgPath)
-    var colors: seq[string]
-    if $args["--colors"] == "nil" and $args["--colorfile"] == "nil":
-      stderr.writeLine("Please specify either a csv file with hex colors or a list of comma separated hex colors")
-      quit 1
-    elif $args["--colors"] != "nil":
-      var colorSplit = strip($args["--colors"]).split(",")
-      colors = @[]
-      for color in colorSplit:
-        if "#" in color:
-          colors.add color.replace("#", "").strip()
-        else:
-          colors.add(color.strip())
-    elif $args["--colorfile"] != "nil":
-      var colorFile: seq[string]
-      try:
-        colorFile = readFile($args["--colorfile"]).strip().split(",")
-      except:
-        var a = $args["--colorfile"]
-        for k, v in pal.fieldPairs:
-          if a == k:
-            colorFile = v
-            break
-      colors = @[]
-      for color in colorFile:
-        if "#" in color.strip:
-          colors.add color.replace("#", "").strip()
-        else:
-          colors.add(color.strip())
-
     let h = imageFile.height
     let w = imageFile.width
     let colorsRGB = colors.prepareClosestColor()
@@ -225,28 +193,39 @@ proc col(imgPath: string, bar: bool): void =
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
 
-if args["flip"]:
-  for img in imgs:
+if flip:
+  for img in flipfile:
     try:
-      flip(img, args["--bar"])
+      flipCol(img, bar)
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
-elif args["luma"]:
-  for img in imgs:
+elif luma:
+  for img in lumafile:
     try:
-      luma(img, args["--bar"])
+      lumaCol(img, bar)
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
-elif args["list"]:
+elif list:
   for k,v in pal.fieldPairs:
     discard v
     echo k
 else:
-  for img in imgs:
+  var cols: seq[string]
+  if "," in palette:
+    cols = palette.split(",").rmTag()
+  elif fileExists(palette):
+    cols = readFile(palette).split(",").rmTag()
+  else:
+    for k, v in pal.fieldPairs:
+      if palette == k:
+        cols = v
+        break
+    cols = cols.rmTag()
+  for img in dyefile:
     try:
-      col(img, args["--bar"])
+      col(img, bar, cols)
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue

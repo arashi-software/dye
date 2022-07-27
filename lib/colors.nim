@@ -2,7 +2,8 @@ import chroma,
        strutils,
        os,
        math,
-       pixie
+       pixie,
+       terminal
 
 proc parseColor(colors: seq[string]): seq[Color] =
   var res: seq[Color] = @[]
@@ -82,3 +83,20 @@ proc fsDither*(oldpixel: Color, newpixel: Color, x, y: int): void =
     (newp.b - oldp.b).int
   ]
 
+proc checkFileOrDir*(file: string): seq[string] =
+  if dirExists(file):
+    result = @[]
+    for Lfile in walkDirRec(file):
+      if ".png" in $Lfile or ".jpg" in $Lfile or ".jpeg" in $Lfile:
+        result.add(strip(Lfile))
+  else:
+    if not fileExists(file):
+      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "File not found: " & file & "\n")
+    result = @[file]
+
+proc rmTag*(colors: seq[string]): seq[string] =
+  for color in colors:
+    if "#" in color:
+      result.add(color.replace("#", ""))
+    else:
+      result.add(color)
