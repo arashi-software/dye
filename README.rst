@@ -39,15 +39,12 @@ Packages
 Currently dye can be installed from
   * AUR
   * Jitter
-You can install from jitter with the command:
-.. code:: bash
-
-   jitter install gh:Infinitybeond1/dye
+You can install from jitter with the command: ``jitter install gh:Infinitybeond1/dye``
 
 Usage
 ~~~~~
 
-.. code:: bash
+.. code-block:: bash
 
    # Get command info
    dye --help
