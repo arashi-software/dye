@@ -36,8 +36,13 @@ Packages
             <img src="https://repology.org/badge/vertical-allrepos/dye.svg" alt="Packaging status" align="right">
         </a>  
     </embed>
-Right now dye is only packaged in the aur but there are plans for many
-other package managers
+Currently dye can be installed from
+  * AUR
+  * Jitter
+You can install from jitter with the command:
+.. code:: bash
+
+   jitter install gh:Infinitybeond1/dye
 
 Usage
 ~~~~~
