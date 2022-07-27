@@ -10,7 +10,9 @@ Installation
 From Source
 ^^^^^^^^^^^
 
-**Deps:** - nim - nimble
+**Deps:** 
+  * nim 
+  * nimble
 
 .. code:: bash
 
