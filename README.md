@@ -17,7 +17,9 @@ There are many binaries for different operating systems and architectures on the
 
 #### Packages
 Right now dye is only packaged in the aur but there are plans for many other package managers
-
+<a href="https://repology.org/project/dye/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/dye.svg" alt="Packaging status" align="right">
+</a>
 ### Usage
 ```bash
 # Get command info
