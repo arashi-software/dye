@@ -8,11 +8,17 @@ on:
 jobs:
   build:
     name: ${{ matrix.os }}-${{ matrix.arch }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [linux, windows, darwin]
-        arch: [386, amd64, arm64]
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+        arch: 
+          - 386 
+          - amd64
+          - arm64
         exclude:  
           - arch: "386"
             os: darwin 
@@ -25,9 +31,9 @@ jobs:
       - name: Build
         run: |
           nimble install -d -y
-          nim c -d:release src/dye.nim
-          mkdir dye
-          cp src/dye dye
+          nimble build
+          mkdir dye-bin
+          cp dye dye-bin
       - uses: montudor/action-zip@v1
         with:
           args: zip -qq -r dye-${{ matrix.os }}-${{ matrix.arch }}.zip dye/dye
