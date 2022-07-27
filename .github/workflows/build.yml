@@ -32,12 +32,12 @@ jobs:
           nimble install -d -y
           nimble build -d:release
       - uses: actions/upload-artifact@v2
-        if: ${{ matrix.os != 'windows' }}
+        if: ${{ matrix.os != 'windows-latest' }}
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
           path: dye
       - uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'windows' }}
+        if: ${{ matrix.os == 'windows-latest' }}
         with:
           name: dye-${{ matrix.os }}-${{ matrix.arch }}
           path: dye.exe
