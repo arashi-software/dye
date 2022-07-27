@@ -50,7 +50,10 @@ Usage
    dye --help
 
    # Convert 'test.jpg' using the dark-decay color palette
-   dye -b --colorfile dark-decay test.jpg
+   dye -b -p dark-decay test.jpg
+   
+   # Convert the image to black and white
+   dye -b -p "#000000,#FFFFFF" test.jpg
 
    # List color palettes
    dye list
