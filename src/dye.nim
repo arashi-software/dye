@@ -8,15 +8,24 @@ import os,
        commandeer,
        strformat
 
-const version = staticRead(fmt"../dye.nimble").splitLines()[0].split("=")[1]
+const versionNum = staticRead(fmt"../dye.nimble").splitLines()[0].split("=")[1]
   .strip().replace("\"", "")
+
+const release = defined(release)
+
+var bType: string
+
+if release:
+  bType = "release"
+else:
+  bType = "debug"
 
 commandline:
   arguments dyefile, string
   option dyebar, bool, "bar", "b"
   option dyeoutfile, string, "out", "o", "null"
   option palette, string, "palette", "p"
-  exitoption "v", "version", "dye v" & version
+  exitoption "v", "version", "dye v$#\nbuild: $#" % @[versionNum, bType]
   subcommand flip, "flip", "f":
     arguments flipfile, string
     option flipoutfile, string, "out", "o", "null"
@@ -96,9 +105,7 @@ proc flipCol(imgPath: string, bar: bool): void =
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
     fileName(imgPath)
-    if fileExists(flipName):
-      removeFile(flipName)
-    newImg.writeFile(flipName)
+    newImg.save(flipName)
   else:
     var imageFile = readImage(imgPath)
     var newImg = copy(imageFile)
@@ -112,9 +119,7 @@ proc flipCol(imgPath: string, bar: bool): void =
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
     fileName(imgPath)
-    if fileExists(flipName):
-      removeFile(flipName)
-    newImg.writeFile(flipName)
+    newImg.save(flipName)
 
 proc lumaCol(imgPath: string, bar: bool): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
@@ -134,9 +139,7 @@ proc lumaCol(imgPath: string, bar: bool): void =
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
     fileName(imgPath)
-    if fileExists(lumaName):
-      removeFile(lumaName)
-    newImg.writeFile(lumaName)
+    newImg.save(lumaName)
   else:
     var imageFile = readImage(imgPath)
     var newImg = copy(imageFile)
@@ -148,9 +151,7 @@ proc lumaCol(imgPath: string, bar: bool): void =
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
     fileName(imgPath)
-    if fileExists(lumaName):
-      removeFile(lumaName)
-    newImg.writeFile(lumaName)
+    newImg.save(lumaName)
 
 proc col(imgPath: string, bar: bool, colors: seq[string]): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
@@ -170,9 +171,7 @@ proc col(imgPath: string, bar: bool, colors: seq[string]): void =
             newImg.getColor(x, y)))
       bar.increment()
 
-    if fileExists(convName):
-      removeFile(convName)
-    newImg.writeFile(convName)
+    newImg.save(convName)
     bar.finish()
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
@@ -187,9 +186,7 @@ proc col(imgPath: string, bar: bool, colors: seq[string]): void =
         newImg.setColor(x = x, y = y, color = getClosestColor(
             colorsRGB, newImg.getColor(x, y)))
 
-    if fileExists(convName):
-      removeFile(convName)
-    newImg.writeFile(convName)
+    newImg.save(convName)
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
 
@@ -214,9 +211,9 @@ elif list:
 else:
   var cols: seq[string]
   if "," in palette:
-    cols = palette.split(",").rmTag()
+    cols = palette.parseColors()
   elif fileExists(palette):
-    cols = readFile(palette).split(",").rmTag()
+    cols = readFile(palette).parseColors()
   else:
     for k, v in pal.fieldPairs:
       if palette == k:

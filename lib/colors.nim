@@ -3,7 +3,8 @@ import chroma,
        os,
        math,
        pixie,
-       terminal
+       terminal,
+       parseutils
 
 proc parseColor(colors: seq[string]): seq[Color] =
   var res: seq[Color] = @[]
@@ -101,3 +102,16 @@ proc rmTag*(colors: seq[string]): seq[string] =
       result.add(color.replace("#", ""))
     else:
       result.add(color)
+
+proc parseColors*(input: string): seq[string] = # Please return colours
+  var
+    i = 0
+    buff = ""
+  while i < input.len:
+    i += input.skipWhile({'#', ' ', ','}, i)
+    i += input.parseUntil(buff, ',', i)
+    result.add buff
+
+proc save*(image: Image, path: string) =
+  discard tryRemoveFile(path)
+  image.writeFile(path)
