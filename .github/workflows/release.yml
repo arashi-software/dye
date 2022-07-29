@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.os }}-${{ matrix.arch }}
+    name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -15,10 +15,6 @@ jobs:
           - ubuntu-latest
           - macOS-latest
           - windows-latest
-        arch: 
-          - 386 
-          - amd64
-          - arm64
 
     steps:
       - name: Checkout sources
@@ -35,19 +31,19 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         with:
           type: 'zip'
-          filename: dye-linux-${{ matrix.arch }}.zip
+          filename: dye-linux.zip
           path: dye
       - uses: thedoctor0/zip-release@main
         if: ${{ matrix.os == 'macOS-latest' }}
         with:
           type: 'zip'
-          filename: dye-darwin-${{ matrix.arch }}.zip
+          filename: dye-darwin.zip
           path: dye
       - uses: thedoctor0/zip-release@main
         if: ${{ matrix.os == 'windows-latest' }}
         with:
           type: 'zip'
-          filename: dye-windows-${{ matrix.arch }}.zip
+          filename: dye-windows.zip
           path: dye.exe
 
       - name: Release
@@ -55,4 +51,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          asset_paths: '["dye-*-*.zip"]'
+          asset_paths: '["dye-*.zip"]'
