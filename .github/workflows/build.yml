@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: ${{ matrix.os }}-${{ matrix.arch }}
+    name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -14,13 +14,6 @@ jobs:
           - ubuntu-latest
           - macOS-latest
           - windows-latest
-        arch: 
-          - 386 
-          - amd64
-          - arm64
-        exclude:  
-          - arch: "386"
-            os: darwin 
 
     steps:
       - name: Checkout sources
@@ -36,10 +29,10 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
         with:
-          name: dye-${{ matrix.os }}-${{ matrix.arch }}
+          name: dye-${{ matrix.os }}
           path: dye
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os == 'windows-latest' }}
         with:
-          name: dye-${{ matrix.os }}-${{ matrix.arch }}
+          name: dye-${{ matrix.os }}
           path: dye.exe
