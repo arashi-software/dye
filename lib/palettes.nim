@@ -9,7 +9,7 @@ let pal* = (
       "#f1cf8a", "#70a5eb", "#c68aee", "#74bee9", "#b6beca", "#485263",
       "#e05f65", "#7ddac5", "#f1cf8a", "#70a5eb", "#c68aee", "#74bee9",
       "#b6beca"],
-  arcticblush: @["#040c16", "#cce9ea", "#c2cae2", "#d9d7d6", "#323949",
+  articblush: @["#040c16", "#cce9ea", "#c2cae2", "#d9d7d6", "#323949",
       "#E6676B", "#A2E4B8", "#e2d06a", "#92bbed", "#ecc6e8", "#80ffff",
       "#cfebec", "#3d3e51", "#FF7377", "#AAF0C1", "#eadd94", "#bdd6f4",
       "#f9ecf7", "#b3ffff", "#edf7f8"],
