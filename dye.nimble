@@ -1,4 +1,4 @@
-version       = "1.1.3"
+version       = "1.1.4"
 author        = "Luke"
 description   = "An image colorizer"
 license       = "GPL-3.0-or-later"
