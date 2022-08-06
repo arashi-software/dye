@@ -11,6 +11,9 @@ install:
 	@dart compile exe bin/dye.dart
 	@sudo install bin/dye.exe /usr/bin/dye
 
-
 uninstall:
 	@rm -rf $(DESTDIR)$(PREFIX)/bin/dye
+
+# Dev commands
+format:
+	@dart format .

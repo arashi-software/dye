@@ -1,5 +1,7 @@
-import 'package:dye_dart/dye_dart.dart';
+import 'package:dye_dart/dye.dart';
 import 'package:args/args.dart';
+import 'package:color/color.dart';
+import 'package:test/test.dart';
 
 void main(List<String> args) {
   var parser = ArgParser();
@@ -10,14 +12,28 @@ void main(List<String> args) {
   if (res["help"]) {
     print(parser.usage);
   } else {
+    // Check to see if all the necessary arguments were provided
     if (res["palette"] == null) {
-      print("You must specify a palette with the --palette flag, run dye -h for more information");
+      print(
+          "You must specify a palette with the --palette flag, run dye -h for more information");
       throw "No palette specified";
+    } else if (files.isEmpty) {
+      print("Please specify some image files to convert");
+      throw "No files specified";
     }
-
     print("Hello, World!");
     print(files);
-    print(normalizeHex(res["palette"]));
+    var col = res["palette"].split(",");
+    var colors = [HexColor('ffffff')];
+    colors.removeAt(0);
+    for (String c in col) {
+      colors.add(Color.hex(normalizeHex(c)));
+    }
+    for (HexColor c in colors) {
+      print(c.toString());
+    }
+    for (String f in files) {
+      colorize(f, colors);
+    }
   }
 }
-
