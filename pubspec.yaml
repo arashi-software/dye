@@ -17,3 +17,4 @@ dependencies:
   image: ^3.2.0
   color: ^3.0.0
   args: ^2.3.1
+  console_bars: ^1.0.5

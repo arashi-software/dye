@@ -1,7 +1,6 @@
 import 'package:dye_dart/dye.dart';
 import 'package:args/args.dart';
 import 'package:color/color.dart';
-import 'package:test/test.dart';
 
 void main(List<String> args) {
   var parser = ArgParser();
@@ -21,16 +20,12 @@ void main(List<String> args) {
       print("Please specify some image files to convert");
       throw "No files specified";
     }
-    print("Hello, World!");
-    print(files);
+    print("Preparing...");
     var col = res["palette"].split(",");
     var colors = [HexColor('ffffff')];
     colors.removeAt(0);
     for (String c in col) {
       colors.add(Color.hex(normalizeHex(c)));
-    }
-    for (HexColor c in colors) {
-      print(c.toString());
     }
     for (String f in files) {
       colorize(f, colors);
