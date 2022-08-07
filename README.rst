@@ -10,7 +10,7 @@ Installation
 From Source
 ^^^^^^^^^^^
 
-**Deps:** 
+**Dependencies Required:** 
   * nim 
   * nimble
 
