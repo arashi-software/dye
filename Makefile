@@ -4,8 +4,7 @@ BINDIR = out
 all:
 	@dart pub get
 	@mkdir -p $(BINDIR)
-	@dart compile exe bin/dye.dart
-	@cp -rvf bin/dye.exe $(BINDIR)/dye
+	@dart compile exe bin/dye.dart -o $(BINDIR)/dye
 
 install:
 	@dart pub get
@@ -22,5 +21,4 @@ format:
 
 dev:
 	@mkdir -p $(BINDIR)
-	@dart compile exe bin/dye.dart
-	@cp -rvf bin/dye.exe $(BINDIR)/dye
+	@dart compile exe bin/dye.dart -o $(BINDIR)/dye

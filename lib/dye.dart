@@ -1,8 +1,7 @@
 import 'package:color/color.dart';
-import 'dart:math';
 import 'package:image/image.dart';
 import 'dart:io';
-import 'package:console_bars/console_bars.dart';
+import 'dart:isolate';
 
 // This function removes the tag from a hex color code.
 // If the hex is only 3 charecters it will convert it into a long form hex
@@ -17,18 +16,16 @@ String normalizeHex(String hex) {
   }
 }
 
-int distance(HexColor c1, HexColor c2) {
-  var h1 = c1.toRgbColor();
-  var h2 = c2.toRgbColor();
-  return sqrt(pow(h2.r - h1.r, 2) + pow(h2.g - h1.g, 2) + pow(h2.b - h1.b, 2))
+int distance(RgbColor c1, RgbColor c2) {
+  return ((c2.r - c1.r) * (c2.r - c1.r)) + ((c2.g - c1.g) * (c2.g - c1.g)) + ((c2.b - c1.b) * (c2.b - c1.b))
       .toInt();
 }
 
-HexColor closestColor(List<HexColor> cols, HexColor o) {
-  var diff = 999;
-  HexColor color;
+RgbColor closestColor(List<RgbColor> cols, RgbColor o) {
+  var diff = 999999;
+  RgbColor color;
   int d;
-  for (HexColor c in cols) {
+  for (RgbColor c in cols) {
     d = distance(c, o);
     if (d < diff) {
       diff = d;
@@ -38,21 +35,37 @@ HexColor closestColor(List<HexColor> cols, HexColor o) {
   return color;
 }
 
-void colorize(String file, List<HexColor> palette) {
-  var image = decodeImage(File(file).readAsBytesSync());
-  var p = FillingBar(desc: "Converting", total: image.height, time: true, percentage:true);
+void colorize(String file, Image image, List<RgbColor> palette) async {
   for (var y = 0; y < image.height; y++) {
     for (var x = 0; x < image.width; x++) {
       var color = image.getPixel(x, y);
       var c = RgbColor(getRed(color), getGreen(color), getBlue(color));
-      var closest = closestColor(palette, c.toHexColor()).toRgbColor();
+      var closest = closestColor(palette, c);
       //print(closest);
       drawPixel(image, x, y, getColor(closest.r, closest.g, closest.b));
     }
-    p.increment();
+    stdout.write("\rConverting $y");
   }
   var filename = file.split('/').last;
   var name = "conv-$filename";
-  File(name).create(recursive: true);
+  stdout.write("\rWriting to $name...");
+  File(name).create(recursive: false);
   File(name).writeAsBytesSync(encodePng(image));
+  stdout.write("\rDone!");
+  exit(0);
+}
+
+class DecodeParam {
+  final File file;
+  final SendPort sendPort;
+  DecodeParam(this.file, this.sendPort);
+}
+
+void decodeIsolate(DecodeParam param) {
+  // Read an image from file (webp in this case).
+  // decodeImage will identify the format of the image and use the appropriate
+  // decoder.
+  var image = decodeImage(param.file.readAsBytesSync());
+  // Resize the image to a 120x? thumbnail (maintaining the aspect ratio).
+  param.sendPort.send(image);
 }
