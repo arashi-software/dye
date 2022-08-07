@@ -1,0 +1,11 @@
+%% coding: utf-8
+{release,{"dye","0.1.0"},
+         {erts,"12.3"},
+         [{kernel,"8.3.1",permanent},
+          {stdlib,"3.17.1",permanent},
+          {elixir,"1.13.2",permanent},
+          {sasl,"4.1.2",permanent},
+          {dye,"0.1.0",permanent},
+          {iex,"1.13.2",none},
+          {compiler,"8.1",permanent},
+          {logger,"1.13.2",permanent}]}.
