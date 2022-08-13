@@ -1,4 +1,4 @@
-version       = "1.1.4"
+version       = "1.1.5"
 author        = "Luke"
 description   = "An image colorizer"
 license       = "GPL-3.0-or-later"
@@ -9,7 +9,7 @@ requires "nim >= 1.4.8"
 requires "progress"
 requires "pixie#head"
 requires "chroma#head"
-requires "commandeer#head"
+requires "therapist"
 #requires "nimoji"
 
 

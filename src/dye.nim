@@ -5,73 +5,29 @@ import os,
        strutils,
        progress,
        terminal,
-       commandeer,
        strformat
 
-const versionNum = staticRead(fmt"../dye.nimble").splitLines()[0].split("=")[1]
-  .strip().replace("\"", "")
+include ../lib/args
 
-const release = defined(release)
-
-var bType: string
-
-if release:
-  bType = "release"
-else:
-  bType = "debug"
-
-commandline:
-  arguments dyefile, string
-  option dyebar, bool, "bar", "b"
-  option dyeoutfile, string, "out", "o", "null"
-  option palette, string, "palette", "p"
-  exitoption "v", "version", "dye v$#\nbuild: $#" % @[versionNum, bType]
-  subcommand flip, "flip", "f":
-    arguments flipfile, string
-    option flipoutfile, string, "out", "o", "null"
-    option flipbar, bool, "bar", "b"
-  subcommand luma, "luma", "l":
-    arguments lumafile, string
-    option lumaoutfile, string, "out", "o", "null"
-    option lumabar, bool, "bar", "b"
-  subcommand helpcmd, "help", "h":
-    option command, string, "command", "c", "null"
-  subcommand list, "list", "l":
-    option x, bool, "X", "x", false # This doesnt actually do anything.
-
-discard x
-
-import ../lib/[colors, palettes, help]
-
-if helpcmd:
-  if command != "null":
-    for k, v in helps.fieldPairs:
-      if k == command:
-        echo v
-        quit 0
-    stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "Unknown command: " & command)
-    quit 0
-  else:
-    echo helps.all
-    quit 0
-
-var outfile: string
-var bar: bool
-
-if flip:
-  outfile = flipoutfile
-  bar = flipbar
-elif luma:
-  outfile = lumaoutfile
-  bar = lumabar
-else:
-  outfile = dyeoutfile
-  bar = dyebar
+import ../lib/[colors, palettes]
 
 var
   flipName: string
   convName: string
   lumaName: string
+
+var outfile: string
+var fileDir: string
+
+if args.flip.seen:
+  outfile = flip.output.value
+  fileDir = flip.file.value 
+elif args.luma.seen:
+  outfile = luma.output.value
+  fileDir = luma.file.value
+else:
+  outfile = args.output.value
+  fileDir = args.file.value
 
 proc fileName(file: string): void =
   if outfile != "null":
@@ -83,7 +39,12 @@ proc fileName(file: string): void =
     convName = "conv-" & getFilename(file) & ".png"
     lumaName = "luma-" & getFilename(file) & ".png"
 
-var imgs: seq[string]
+var files: seq[string]
+if dirExists(fileDir):
+  for file in walkDir(fileDir):
+    files.add(file.path)
+else:
+  files.add(fileDir)
 
 proc flipCol(imgPath: string, bar: bool): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
@@ -190,39 +151,39 @@ proc col(imgPath: string, bar: bool, colors: seq[string]): void =
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
 
-if flip:
-  for img in flipfile:
+if args.flip.seen:
+  for img in files:
     try:
-      flipCol(img, bar)
+      flipCol(img, flip.bar.seen)
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
-elif luma:
-  for img in lumafile:
+elif args.luma.seen:
+  for img in files:
     try:
-      lumaCol(img, bar)
+      lumaCol(img, luma.bar.seen)
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
-elif list:
+elif args.list.seen:
   for k, v in pal.fieldPairs:
     discard v
     echo k
 else:
   var cols: seq[string]
-  if "," in palette:
-    cols = palette.parseColors()
-  elif fileExists(palette):
-    cols = readFile(palette).parseColors()
+  if "," in args.palette.value:
+    cols = args.palette.value.parseColors()
+  elif fileExists(args.palette.value):
+    cols = readFile(args.palette.value).parseColors()
   else:
     for k, v in pal.fieldPairs:
-      if palette == k:
+      if args.palette.value == k:
         cols = v
         break
     cols = cols.rmTag()
-  for img in dyefile:
+  for img in files:
     try:
-      col(img, bar, cols)
+      col(img, args.bar.seen, cols)
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
