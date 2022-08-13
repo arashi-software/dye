@@ -5,26 +5,11 @@ import os,
        strutils,
        progress,
        terminal,
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 025954b (feat: update command for macos and linux)
        strformat
 
 include ../lib/args
 
-import ../lib/[colors, palettes]
-<<<<<<< HEAD
-=======
-=======
-       strformat,
-       asyncdispatch
-
-include ../lib/args
-
 import ../lib/[colors, palettes, updates]
->>>>>>> 45263dd (feat: update command for macos and linux)
->>>>>>> 025954b (feat: update command for macos and linux)
 
 var
   flipName: string
