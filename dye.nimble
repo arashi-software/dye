@@ -20,10 +20,6 @@ task lint, "Lint all *.nim files":
 task b, "Build for release":
   exec "nimble install -d:release && nim c -d:ssl -d:release src/dye && mkdir -p bin && mv -f src/dye bin/"
 
-
-task bz, "Build using zig as a c compiler":
-  exec "nimble install -y -d && nim c -d:release -d:ssl --cc:clang --clang.exe:'scripts/zigcc' src/dye.nim && mkdir -p bin && mv -f src/dye bin/"
-
 task bi, "Build and install to your path (/usr/bin/)":
   exec "nimble install -d:release && nim c -d:release -d:ssl src/dye"
 

@@ -1,7 +1,7 @@
 import os, harpoon, uri, strutils, asyncdispatch, distros, strformat, osproc, zippy/ziparchives
 
 proc u*(v: string): void =
-  let cv = getContent(parseUri "https://raw.githubusercontent.com/Infinitybeond1/dye/master/dye.nimble").splitLines()[0].split("=")[1].strip().replace("\"", "")
+  let cv = getContent(parseUri "https://raw.githubusercontent.com/Infinitybeond1/dye/main/dye.nimble").splitLines()[0].split("=")[1].strip().replace("\"", "")
   if v.replace(".", "").strip().parseInt() < cv.replace(".", "").strip().parseInt():
     stdout.write("Updates are availible, would you like to update (Y/n): ")
     let a = readLine(stdin).toLower()
@@ -36,7 +36,7 @@ proc u*(v: string): void =
   elif v.replace(".", "").strip().parseInt() == cv.replace(".", "").strip().parseInt():
     echo "You're all up to date"
   else:
-    echo fmt"Your version: {v}\nCurrent version: {cv}"
+    echo "Your version: $#\nCurrent version: $#" % @[v, cv]
 
 proc tu*(v: string): void =
   let cv = getContent(parseUri "https://raw.githubusercontent.com/Infinitybeond1/dye/master/version.txt")

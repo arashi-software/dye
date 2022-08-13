@@ -158,14 +158,8 @@ if args.flip.seen:
     except:
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
       continue
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
 elif args.update.seen:
   u(versionNum)
->>>>>>> 45263dd (feat: update command for macos and linux)
->>>>>>> 025954b (feat: update command for macos and linux)
 elif args.luma.seen:
   for img in files:
     try:
