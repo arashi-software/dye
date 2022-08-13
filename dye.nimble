@@ -10,6 +10,7 @@ requires "progress"
 requires "pixie#head"
 requires "chroma#head"
 requires "therapist"
+requires "harpoon#head"
 #requires "nimoji"
 
 
