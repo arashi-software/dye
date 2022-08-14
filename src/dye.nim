@@ -21,7 +21,7 @@ var fileDir: string
 
 if args.flip.seen:
   outfile = flip.output.value
-  fileDir = flip.file.value 
+  fileDir = flip.file.value
 elif args.luma.seen:
   outfile = luma.output.value
   fileDir = luma.file.value
@@ -29,7 +29,7 @@ else:
   outfile = args.output.value
   fileDir = args.file.value
 
-proc fileName(file: string): void =
+proc fileName(file: string, outfile: string): void =
   if outfile != "null":
     flipName = outfile & ".png"
     convName = outfile & ".png"
@@ -39,12 +39,12 @@ proc fileName(file: string): void =
     convName = "conv-" & getFilename(file) & ".png"
     lumaName = "luma-" & getFilename(file) & ".png"
 
-var files: seq[string]
-if dirExists(fileDir):
-  for file in walkDir(fileDir):
-    files.add(file.path)
-else:
-  files.add(fileDir)
+proc addFiles(fileDir: string): seq[string] =
+  if dirExists(fileDir):
+    for file in walkDir(fileDir):
+      result.add(file.path)
+  else:
+    result.add(fileDir)
 
 proc flipCol(imgPath: string, bar: bool): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
@@ -65,7 +65,7 @@ proc flipCol(imgPath: string, bar: bool): void =
     bar.finish()
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
-    fileName(imgPath)
+    fileName(imgPath, flip.output.value)
     newImg.save(flipName)
   else:
     var imageFile = readImage(imgPath)
@@ -79,7 +79,7 @@ proc flipCol(imgPath: string, bar: bool): void =
         newImg.setColor(x, y, rgbx.color)
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
-    fileName(imgPath)
+    fileName(imgPath, flip.output.value)
     newImg.save(flipName)
 
 proc lumaCol(imgPath: string, bar: bool): void =
@@ -99,7 +99,7 @@ proc lumaCol(imgPath: string, bar: bool): void =
     bar.finish()
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
-    fileName(imgPath)
+    fileName(imgPath, luma.output.value)
     newImg.save(lumaName)
   else:
     var imageFile = readImage(imgPath)
@@ -111,13 +111,13 @@ proc lumaCol(imgPath: string, bar: bool): void =
         #echo -(newImg.getColor(x, y).hsl().l / 100)
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
-    fileName(imgPath)
+    fileName(imgPath, luma.output.value)
     newImg.save(lumaName)
 
 proc col(imgPath: string, bar: bool, colors: seq[string]): void =
   stdout.styledWriteLine(fgYellow, "Converting: ", fgWhite, splitFile(
       imgPath).name & splitFile(imgPath).ext & " ...")
-  fileName(imgPath)
+  fileName(imgPath, args.output.value)
   if bar:
     var imageFile = readImage(imgPath)
     let h = imageFile.height
@@ -131,7 +131,6 @@ proc col(imgPath: string, bar: bool, colors: seq[string]): void =
         newImg.setColor(x = x, y = y, color = getClosestColor(colorsRGB,
             newImg.getColor(x, y)))
       bar.increment()
-
     newImg.save(convName)
     bar.finish()
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
@@ -146,13 +145,12 @@ proc col(imgPath: string, bar: bool, colors: seq[string]): void =
       for x in 1..w:
         newImg.setColor(x = x, y = y, color = getClosestColor(
             colorsRGB, newImg.getColor(x, y)))
-
     newImg.save(convName)
     stdout.styledWriteLine(fgGreen, "Completed: ", fgWhite, splitFile(
         imgPath).name & splitFile(imgPath).ext & "\n")
 
 if args.flip.seen:
-  for img in files:
+  for img in addFiles(flip.file.value):
     try:
       flipCol(img, flip.bar.seen)
     except:
@@ -161,7 +159,7 @@ if args.flip.seen:
 elif args.update.seen:
   u(versionNum)
 elif args.luma.seen:
-  for img in files:
+  for img in addFiles(luma.file.value):
     try:
       lumaCol(img, luma.bar.seen)
     except:
@@ -183,7 +181,7 @@ else:
         cols = v
         break
     cols = cols.rmTag()
-  for img in files:
+  for img in addFiles(args.file.value):
     try:
       col(img, args.bar.seen, cols)
     except:

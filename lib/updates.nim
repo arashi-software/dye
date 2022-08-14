@@ -1,7 +1,9 @@
-import os, harpoon, uri, strutils, asyncdispatch, distros, strformat, osproc, zippy/ziparchives
+import os, harpoon, uri, strutils, asyncdispatch, distros, strformat, osproc,
+    zippy/ziparchives
 
 proc u*(v: string): void =
-  let cv = getContent(parseUri "https://raw.githubusercontent.com/Infinitybeond1/dye/main/dye.nimble").splitLines()[0].split("=")[1].strip().replace("\"", "")
+  let cv = getContent(parseUri "https://raw.githubusercontent.com/Infinitybeond1/dye/main/dye.nimble").splitLines()[
+      0].split("=")[1].strip().replace("\"", "")
   if v.replace(".", "").strip().parseInt() < cv.replace(".", "").strip().parseInt():
     stdout.write("Updates are availible, would you like to update (Y/n): ")
     let a = readLine(stdin).toLower()
