@@ -12,7 +12,6 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macOS-latest
           - windows-latest
 
     steps:
@@ -25,13 +24,14 @@ jobs:
         run: |
           dart pub get
           dart compile exe bin/dye.dart
+      - name: Archive Release
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: dye-${{ matrix.os }}.zip
+          path: 'bin'
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
         with:
-          name: dye-${{ matrix.os }}
-          path: bin/dye.exe
-      - uses: actions/upload-artifact@v2
-        if: ${{ matrix.os == 'windows-latest' }}
-        with:
-          name: dye-${{ matrix.os }}
-          path: bin/dye.exe
+          name: dye-${{ matrix.os }}.zip
+          path: dye-${{ matrix.os }}.zip
