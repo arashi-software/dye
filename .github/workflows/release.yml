@@ -13,7 +13,6 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macOS-latest
           - windows-latest
 
     steps:
@@ -32,12 +31,6 @@ jobs:
         with:
           type: 'zip'
           filename: dye-linux.zip
-          path: dye
-      - uses: thedoctor0/zip-release@main
-        if: ${{ matrix.os == 'macOS-latest' }}
-        with:
-          type: 'zip'
-          filename: dye-darwin.zip
           path: dye
       - uses: thedoctor0/zip-release@main
         if: ${{ matrix.os == 'windows-latest' }}
