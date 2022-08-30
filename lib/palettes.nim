@@ -18,7 +18,7 @@ let pal* = (
       "#E6676B", "#A2E4B8", "#e2d06a", "#92bbed", "#ecc6e8", "#80ffff",
       "#cfebec", "#3d3e51", "#FF7377", "#AAF0C1", "#eadd94", "#bdd6f4",
       "#f9ecf7", "#b3ffff", "#edf7f8"],
-  catpuccin: @["#F5E0DC", "#F2CDCD", "#F5C2E7", "#CBA6F7", "#F38BA8", "#EBA0AC",
+  catppuccin: @["#F5E0DC", "#F2CDCD", "#F5C2E7", "#CBA6F7", "#F38BA8", "#EBA0AC",
       "#FAB387", "#F9E2AF", "#A6E3A1", "#94E2D5", "#89DCEB", "#90C1FB",
       "#74C7EC", "#B4BEFE", "#C6D0F5", "#AEB7D9", "#969DBC", "#7E84A0",
       "#666A83", "#4E5167", "#36374A", "#1E1E2E", "#12121C", "#07070A"],
@@ -29,6 +29,11 @@ let pal* = (
   nord: @["#2e3440", "#3b4252", "#434c5e", "#4c566a", "#d8dee9", "#e5e9f0",
       "#eceff4", "#8fbcbb", "#88c0d0", "#81a1c1", "#5e81ac", "#bf616a",
       "#d08770",
-      "#ebcb8b", "#a3be8c", "#b48ead"]
+      "#ebcb8b", "#a3be8c", "#b48ead"],
+  everforest: @[
+    "#d3c6aa", "#e67e80", "#e69875", "#dbbc7f", "#a7c080", "#83c092", "#7fbbb3",
+    "#d699b6", "#7a8478", "#859289", "#9da9a0", "#f8f0dc", "#efead4", "#e9e5cf",
+    "#e1ddc9", "#dcd8c4", "#b9c0ab", "#e6e9c4", "#f9e0d4", "#edeece", "#e7ede5", "#f6e9c9"
+  ]
 )
 
