@@ -1,4 +1,4 @@
-version       = "1.1.8"
+version       = "1.1.9"
 author        = "Luke"
 description   = "An image colorizer"
 license       = "GPL-3.0-or-later"
@@ -12,7 +12,7 @@ requires "chroma#head"
 requires "therapist"
 requires "harpoon#head"
 requires "zippy"
-#requires "nimoji"
+#requires "downit"
 
 task lint, "Lint all *.nim files":
   exec "nimpretty --indent:2 */**.nim"
