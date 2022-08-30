@@ -6,12 +6,12 @@ import chroma,
        terminal,
        parseutils
 
-proc parseColor(colors: seq[string]): seq[Color] =
-  var res: seq[Color] = @[]
-  for color in colors:
-    res.add(parseHex(color))
-  res
-
+#proc parseColor(colors: seq[string]): seq[Color] =
+#  var res: seq[Color] = @[]
+#  for color in colors:
+#    res.add(parseHex(color))
+#  res
+#
 # proc prepareClosestColor*(colors: seq[string]): seq[ColorLAB] =
 #   for color in colors:
 #     result.add parseHex(color).to(ColorLAB)
@@ -69,27 +69,12 @@ proc invertLuma*(color: Color): Color =
   hsl.l = 100 - hsl.l
   result = color(hsl)
 
-proc colorMatch*(seq: seq[string], color: Color): bool =
-  for s in seq:
-    if color == s.parseHex():
-      return true
-
-proc fsDither*(oldpixel: Color, newpixel: Color, x, y: int): void =
-  ## This function implements Floyd-Steinberg dithering.
-  var oldp = oldpixel.to(ColorRGB)
-  var newp = newpixel.to(ColorRGB)
-  let quantError = @[
-    (newp.r - oldp.r).int,
-    (newp.g - oldp.g).int,
-    (newp.b - oldp.b).int
-  ]
-
 proc checkFileOrDir*(file: string): seq[string] =
   if dirExists(file):
     result = @[]
-    for Lfile in walkDirRec(file):
-      if ".png" in $Lfile or ".jpg" in $Lfile or ".jpeg" in $Lfile:
-        result.add(strip(Lfile))
+    for lfile in walkDirRec(file):
+      if ".png" in $lfile or ".jpg" in $lfile or ".jpeg" in $lfile:
+        result.add(strip(lfile))
   else:
     if not fileExists(file):
       stdout.styledWriteLine(fgRed, "Error: ", fgWhite, "File not found: " &
@@ -113,5 +98,5 @@ proc parseColors*(input: string): seq[string] = # Please return colours
     result.add buff
 
 proc save*(image: Image, path: string) =
-  discard tryRemoveFile(path)
+  removeFile(path)
   image.writeFile(path)
