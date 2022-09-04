@@ -49,7 +49,7 @@ Usage
    # Get command info
    dye --help
 
-   # Convert 'test.jpg' using the dark-decay color palette
+   # Convert 'test.jpg' using the dark-decay color palette (currently available color palettes: decay, darkdecay, decayce, articblush, catppuccin, ok, nord, everforest)
    dye -b -p dark-decay test.jpg
    
    # Convert the image to black and white
