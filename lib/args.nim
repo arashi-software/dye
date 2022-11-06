@@ -47,6 +47,8 @@ let args* = (
   update: newCommandArg(@["update", "u"], update, help = "Update dye"),
   bar: newCountArg(@["--bar", "-b"], multi = false,
       help = "Show a progress bar"),
+  recursive: newCountArg(@["--rec", "-r"], multi = false,
+      help = "Recursively scan directories"),
   output: newStringArg(@["--output", "-o"], help = "The file to write to",
       optional = true, defaultVal = "null"),
   file: newPathArg(@["<file>"], help = "The file (or folder of files) to convert",

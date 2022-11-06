@@ -41,8 +41,14 @@ proc fileName(file: string, outfile: string): void =
 
 proc addFiles(fileDir: string): seq[string] =
   if dirExists(fileDir):
-    for file in walkDir(fileDir):
-      result.add(file.path)
+    if args.recursive.seen:
+      for file in walkDirRec(fileDir):
+        if file.splitFile().ext in [".png", ".jpg", ".jpeg"]:
+          result.add(file)
+    else:
+      for file in walkDir(fileDir):
+        if file.path.splitFile().ext in [".png", ".jpg", ".jpeg"]:
+          result.add(file.path)
   else:
     result.add(fileDir)
 
@@ -154,7 +160,7 @@ if args.flip.seen:
     try:
       flipCol(img, flip.bar.seen)
     except:
-      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
+      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg(), "\n")
       continue
 elif args.update.seen:
   u(versionNum)
@@ -163,7 +169,7 @@ elif args.luma.seen:
     try:
       lumaCol(img, luma.bar.seen)
     except:
-      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
+      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg(), "\n")
       continue
 elif args.list.seen:
   for k, v in pal.fieldPairs:
@@ -185,5 +191,5 @@ else:
     try:
       col(img, args.bar.seen, cols)
     except:
-      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg())
+      stdout.styledWriteLine(fgRed, "Error: ", fgWhite, getCurrentExceptionMsg(), "\n")
       continue
