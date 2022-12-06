@@ -16,9 +16,7 @@ From Source
 
 .. code:: bash
 
-   git clone https://github.com/Infinitybeond1/dye # clone the repo
-   cd dye
-   nimble bi # Build and install dye
+ nimble install dye
 
 Binary
 ^^^^^^
