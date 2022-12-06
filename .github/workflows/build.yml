@@ -31,7 +31,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'false'
         run: nimble install -d -y --deepcopy:on
       - name: Build
-        run: imble build -d:release -d:ssl --verbose
+        run: nimble build -d:release -d:ssl --verbose
       - name: Cache
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
