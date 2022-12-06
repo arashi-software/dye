@@ -24,8 +24,8 @@ jobs:
           version: devel
       - name: Build
         run: |
-          nimble install -d -y
-          nimble build -d:release -d:ssl --deepcopy:on --verbose
+          nimble install -d -y --deepcopy:on
+          nimble build -d:release -d:ssl --verbose
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
         with:
