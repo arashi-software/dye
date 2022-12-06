@@ -22,21 +22,17 @@ jobs:
         with:
           path: 'nim'
           version: devel
-      - name: Restore cache
-        uses: actions/cache@v3.1.0-beta.1
-        with:
-          restore-keys: |
-            ${{ runner.os }}-nim
-      - name: Build
-        run: |
-          nimble install -d -y --deepcopy:on
-          nimble build -d:release -d:ssl --verbose
-      - name: Cache
-        uses: actions/cache@v3.1.0-beta.1
+      - uses: actions/cache@v3.1.0-beta.1
         with:
           path: |
             ../../../../.nimble/pkgs/
           key: ${{ runner.os }}-nim-${{ hashFiles('**/nimble.lock') }}
+      - name: Install dependacies
+        if: steps.cache.outputs.cache-hit != 'false'
+        run: nimble install -d -y --deepcopy:on
+      - name: Build
+        run: imble build -d:release -d:ssl --verbose
+      - name: Cache
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
         with:
