@@ -22,6 +22,11 @@ jobs:
         with:
           path: 'nim'
           version: devel
+      - name: Restore cache
+        uses: actions/cache@v3.1.0-beta.1
+        with:
+          restore-keys: |
+            ${{ runner.os }}-nim
       - name: Build
         run: |
           nimble install -d -y --deepcopy:on
@@ -32,8 +37,6 @@ jobs:
           path: |
             ../../../../.nimble/pkgs/
           key: ${{ runner.os }}-nim-${{ hashFiles('**/nimble.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-nim
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
         with:
