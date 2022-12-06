@@ -26,6 +26,14 @@ jobs:
         run: |
           nimble install -d -y --deepcopy:on
           nimble build -d:release -d:ssl --verbose
+      - name: Cache
+        uses: actions/cache@v3.1.0-beta.1
+        with:
+          path: |
+            ../../../../.nimble/pkgs/
+          key: ${{ runner.os }}-nim-${{ hashFiles('**/nimble.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nim
       - uses: actions/upload-artifact@v2
         if: ${{ matrix.os != 'windows-latest' }}
         with:
