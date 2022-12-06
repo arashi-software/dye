@@ -16,7 +16,7 @@ From Source
 
 .. code:: bash
 
- nimble install dye@#head
+ nimble install dye@"#head"
 
 Binary
 ^^^^^^
