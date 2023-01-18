@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: |
           nimble install -d -y
-          nimble build -d:release -d:ssl
+          nimble build -d:release -d:ssl --deepcopy:on
       - uses: thedoctor0/zip-release@main
         if: ${{ matrix.os == 'ubuntu-latest' }}
         with:
