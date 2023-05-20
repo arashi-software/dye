@@ -21,11 +21,11 @@ jobs:
       - uses: alaviss/setup-nim@0.1.1
         with:
           path: 'nim'
-          version: devel
+          version: stable
       - name: Build
         run: |
           nimble install -d -y
-          nimble build -d:release -d:ssl --deepcopy:on
+          nimble build -d:release --deepcopy:on
       - uses: thedoctor0/zip-release@main
         if: ${{ matrix.os == 'ubuntu-latest' }}
         with:
