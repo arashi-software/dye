@@ -36,6 +36,7 @@ Packages
     </embed>
 Currently dye can be installed from
   * AUR
+  * Nimble
   * Jitter
 You can install from `jitter <https://github.com/sharpcdf/jitter>`_ with the command: ``jitter install gh:Infinitybeond1/dye``
 
