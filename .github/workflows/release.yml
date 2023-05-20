@@ -14,6 +14,8 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout sources
@@ -39,8 +41,8 @@ jobs:
           path: dye.exe
 
       - name: Release
-        uses: alexellis/upload-assets@0.2.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+        uses: ananoufo/action-upload-artifacts-and-release-assets@main  
         with:
-          asset_paths: '["dye-*.zip"]'
+          path: "dye-*.zip"
+          github-token: ${{ secrets.github_token }}
+          upload-release-files: true
