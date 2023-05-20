@@ -16,6 +16,14 @@ jobs:
           - windows-latest
     permissions:
       contents: write
+      checks: write
+
+      actions: read
+      issues: read
+      packages: write
+      pull-requests: read
+      repository-projects: read
+      statuses: read
 
     steps:
       - name: Checkout sources
@@ -41,8 +49,8 @@ jobs:
           path: dye.exe
 
       - name: Release
-        uses: ananoufo/action-upload-artifacts-and-release-assets@main  
+        uses: alexellis/upload-assets@0.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
         with:
-          path: "dye-*.zip"
-          github-token: ${{ secrets.github_token }}
-          upload-release-files: true
+          asset_paths: '["dye-*.zip"]'
